@@ -13,11 +13,11 @@ func main() {
 	// git hub repo details
 	owner := "parveshbhardwaj"
 	repo := "workflow-dispatcher"
-	workflowID := ""
+	workflowID := "main.yaml"
 
 	// creating work flow input
 	workflowInput := struct {
-		Ref string
+		Ref string `json:"ref"`
 	}{Ref: "main"}
 	var buf bytes.Buffer
 	err := json.NewEncoder(&buf).Encode(workflowInput)
@@ -25,6 +25,7 @@ func main() {
 		log.Fatal(err)
 		return
 	}
+
 	// creating workflow dispatcher request
 	workflowDispatchURL := fmt.Sprintf("https://api.github.com/repos/%s/%s/actions/workflows/%s/dispatches",
 		owner, repo, workflowID)
@@ -34,7 +35,7 @@ func main() {
 
 	// setting header to the request
 	req.Header.Set("Accept", "application/vnd.github+json")
-	req.Header.Set("Authorization", "Bearer <YOUR-TOKEN>")
+	req.Header.Set("Authorization", "Bearer <Access Token>")
 	req.Header.Set("X-GitHub-Api-Version", "2022-11-28")
 
 	if err != nil {
@@ -47,6 +48,5 @@ func main() {
 		log.Fatal(err)
 		return
 	}
-	fmt.Printf("workflow triggered with status code %s", resp.Status)
-
+	fmt.Printf("workflow triggered with status code %s \n", resp.Status)
 }
